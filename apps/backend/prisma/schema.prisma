@@ -26,7 +26,7 @@ model User{
   notes Notes[]
   timer_session TimerSession[]
   timer_history TimerHistory[]
-  watch_istory WatchHistory[]
+  watch_history WatchHistory[]
   user_devices UserDevices[]
   sync_sessions SyncSessions[]
   pending_sync_actions PendingSyncActions[]
