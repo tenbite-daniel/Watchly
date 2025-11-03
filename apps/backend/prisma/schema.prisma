@@ -24,6 +24,9 @@ model User{
   lists Lists[]
   ratings Ratings[]
   notes Notes[]
+  timer_session TimerSession[]
+  timer_history TimerHistory[]
+  watch_istory WatchHistory[]
 }
 
 model UserSettings{
@@ -248,6 +251,7 @@ model ListItem{
   // Relations
   lists Lists @relation(fields: [list_id], references: [id], onDelete: Cascade)
   media MediaCache @relation(fields: [media_id], references: [id], onDelete: Cascade)
+  watch_history WatchHistory[]
 
   @@unique([list_id, media_id])
   @@index([list_id])
@@ -295,4 +299,64 @@ model Notes{
   @@index([media_id])
   @@index([is_public])
   @@index([created_at])
+}
+
+model TimerSession{
+  id String @id @default(uuid())
+  user_id String @unique
+  total_seconds Int @default(7200)
+  remaining_seconds Int @default(7200)
+  is_paused Boolean @default(true)
+  last_started_at DateTime?
+  daily_reset_time String @default("12:00:00")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations 
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  timer_history TimerHistory[]
+
+  @@index([user_id])
+  @@index([is_paused])
+}
+
+model TimerHistory{
+  id String @id @default(uuid())
+  user_id String 
+  session_id String
+  seconds_used Int
+  activity_date DateTime
+  created_at DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  session TimerSession @relation(fields: [session_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, activity_date])
+  @@index([user_id])
+  @@index([session_id])
+  @@index([activity_date])
+}
+
+model WatchHistory{
+  id String @id @default(uuid())
+  user_id String
+  list_item_id String
+  activity_type String
+  progress_data Json?
+  metadata Json?
+  device_type String?
+  session_duration Int?
+  platform String?
+  created_at DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  list_item ListItem @relation(fields: [list_item_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([list_item_id])
+  @@index([activity_type])
+  @@index([created_at])
+  @@index([device_type])
 }
