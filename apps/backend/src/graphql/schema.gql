@@ -1,0 +1,44 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Media {
+  adult: Boolean
+  backdrop_path: String
+  created_at: DateTime!
+  episode_run_time: [String!]
+  external_ids: [String!]
+  first_air_date: DateTime
+  genres: [String!]
+  id: ID!
+  in_production: Boolean
+  is_manual_entry: Boolean!
+  last_air_date: DateTime
+  last_fetched_at: DateTime!
+  number_of_episodes: Int
+  number_of_seasons: Int
+  origial_language: String
+  origianl_title: String
+  popularity: Float
+  poster_path: String
+  production_companies: [String!]
+  release_date: String
+  runtime: Int
+  source_api: String!
+  status: String
+  tagline: String
+  title: String!
+  trailer_urls: [String!]
+  type: String!
+  vote_average: Float
+  vote_count: Int
+}
+
+type Query {
+  media: [Media!]!
+}

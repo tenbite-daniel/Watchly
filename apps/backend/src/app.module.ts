@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
+import { MediaModule } from './media/media.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { join } from 'path';
       sortSchema: true,
     }),
     PrismaModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
