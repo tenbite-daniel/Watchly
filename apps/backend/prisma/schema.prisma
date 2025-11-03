@@ -33,3 +33,70 @@ model UserSettings{
   userId String @unique
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model MediaCache{
+  id BigInt @id
+  type String
+  title String
+  original_title String?
+  overview String?
+  tagline String?
+  poster_path String?
+  backdrop_path String?
+  release_date DateTime?
+  first_air_date DateTime?
+  status String?
+  popularity Float?
+  vote_average Float?
+  vote_count Int?
+  original_language String?
+  adult Boolean @default(false)
+  genres Json?
+  production_companies Json?
+  runtime Int?
+  number_of_seasons Int?
+  number_of_episodes Int?
+  episode_run_time Json?
+  in_production Boolean?
+  last_air_date DateTime?
+  trailer_urls Json?
+  external_ids Json?
+  is_manual_entry Boolean @default(false)
+  source_api String @default("tmdb")
+  last_fetched_at DateTime @default(now())
+  created_at DateTime @default(now())
+}
+
+model SearchCache{
+  id String @id @default(uuid())
+  query_hash String?
+  filter_hash String?
+  external_id String?
+  search_type String
+  results Json
+  total_results Int?
+  total_pages Int?
+  created_at DateTime @default(now())
+  expires_at DateTime
+
+  @@index([query_hash, expires_at])
+  @@index([filter_hash, expires_at])
+}
+
+model PeopleCache{
+  id BigInt @id
+  name String
+  also_known_for Json?
+  gender Int? // 0=U, 1=F, 2=M
+  known_for_department String?
+  biography String?
+  birthday DateTime?
+  place_of_birth String?
+  profile_path String?
+  imdb_id String?
+  last_fetched_at DateTime @default(now())
+  created_at DateTime @default(now())
+
+  @@index([name])
+  @@index([last_fetched_at])
+}
