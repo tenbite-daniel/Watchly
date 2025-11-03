@@ -100,3 +100,33 @@ model PeopleCache{
   @@index([name])
   @@index([last_fetched_at])
 }
+
+model GenresCache{
+  id String @id @default(uuid())
+  genre_id Int
+  name String
+  media_count Int?
+  last_updated_at DateTime
+  created_at DateTime @default(now())
+
+  @@index([genre_id])
+  @@index([name])
+  @@index([last_updated_at])
+}
+
+model MediaCollections{
+  id String @id @default(uuid())
+  collection_id BigInt
+  name String
+  overview String?
+  poster_path String?
+  backdrop_path String?
+  media_ids Json?
+  collection_data Json?
+  last_fetched_at DateTime
+  created_at DateTime @default(now())
+
+  @@index([collection_id])
+  @@index([name])
+  @@index([last_fetched_at])
+}
