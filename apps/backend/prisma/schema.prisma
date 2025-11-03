@@ -7,3 +7,29 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User{
+  id String @id @default(uuid())
+  email String @unique
+  username String 
+  display_name String?
+  avatar_url String? 
+  password String
+  timeZone String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  settings UserSettings?
+}
+
+model UserSettings{
+  id String @id @default(uuid())
+  notifications_enabled Boolean @default(true)
+  email_updates Boolean @default(true)
+  auto_play_trailers Boolean @default(true)
+  default_list_type String @default("watchlist")
+  theme String @default("dark")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  userId String @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
