@@ -65,6 +65,14 @@ model MediaCache{
   source_api String @default("tmdb")
   last_fetched_at DateTime @default(now())
   created_at DateTime @default(now())
+
+  // Relations
+  tv_seasons TvSeason[]
+
+  @@index([type])
+  @@index([popularity])
+  @@index([release_date])
+  @@index([last_fetched_at])
 }
 
 model SearchCache{
@@ -129,4 +137,71 @@ model MediaCollections{
   @@index([collection_id])
   @@index([name])
   @@index([last_fetched_at])
+}
+
+model TvSeason{
+  id String @id @default(uuid())
+  media_id BigInt
+  season_number Int
+  name String?
+  overview String?
+  air_date DateTime?
+  episode_count Int?
+  poster_path String?
+  season_data Json?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations 
+  media MediaCache @relation(fields: [media_id], references: [id], onDelete: Cascade)
+  episodes TvEpisode[]
+
+  @@index([media_id, season_number])
+  @@index([media_id])
+  @@index([season_number])
+}
+
+model TvEpisode{
+  id String @id @default(uuid())
+  season_id String
+  episode_number Int
+  name String?
+  overview String?
+  air_date DateTime?
+  runtime Int?
+  still_path String?
+  vote_average Float?
+  vote_count Int?
+  episode_data Json?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  season TvSeason @relation(fields: [season_id], references: [id], onDelete: Cascade)
+  episode_progress EpisodeProgress[]
+
+  @@index([season_id, episode_number])
+  @@index([season_id])
+  @@index([episode_number])
+  @@index([air_date])
+}
+
+model EpisodeProgress{
+  id String @id @default(uuid())
+  user_id String
+  episode_id String
+  last_watched_timestamp Int @default(0)
+  episode_duration Int?
+  status String @default("unwatched")
+  created_at DateTime @default(now())
+  last_updated_at DateTime @default(now())
+
+  // Relations
+  episode TvEpisode @relation(fields: [episode_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, episode_id])
+  @@index([user_id])
+  @@index([episode_id])
+  @@index([status])
+  @@index([last_updated_at])
 }
