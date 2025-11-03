@@ -18,11 +18,17 @@ model User{
   timeZone String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  // Relations
   settings UserSettings?
+  lists Lists[]
+  ratings Ratings[]
+  notes Notes[]
 }
 
 model UserSettings{
   id String @id @default(uuid())
+  userId String @unique
   notifications_enabled Boolean @default(true)
   email_updates Boolean @default(true)
   auto_play_trailers Boolean @default(true)
@@ -30,7 +36,8 @@ model UserSettings{
   theme String @default("dark")
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  userId String @unique
+  
+  // Relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -68,6 +75,9 @@ model MediaCache{
 
   // Relations
   tv_seasons TvSeason[]
+  list_items ListItem[]
+  ratings Ratings[]
+  notes Notes[]
 
   @@index([type])
   @@index([popularity])
@@ -204,4 +214,85 @@ model EpisodeProgress{
   @@index([episode_id])
   @@index([status])
   @@index([last_updated_at])
+}
+
+model Lists{
+  id String @id @default(uuid())
+  user_id String
+  list_type String
+  name String?
+  is_public Boolean @default(false)
+  sort_order String @default("added_date")
+  created_at DateTime @default(now())
+  last_updated_at DateTime @updatedAt
+
+  // Relaions 
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  list_items ListItem[]
+
+  @@unique([user_id, list_type, name])
+  @@index([user_id])
+  @@index([list_type])
+  @@index([is_public])
+}
+model ListItem{
+  id String @id @default(uuid())
+  list_id String
+  media_id BigInt
+  progress Json? @default("{}")
+  watch_count Int @default(0)
+  last_watched_at DateTime?
+  created_at DateTime @default(now())
+  last_updated_at DateTime @updatedAt
+
+  // Relations
+  lists Lists @relation(fields: [list_id], references: [id], onDelete: Cascade)
+  media MediaCache @relation(fields: [media_id], references: [id], onDelete: Cascade)
+
+  @@unique([list_id, media_id])
+  @@index([list_id])
+  @@index([media_id])
+  @@index([last_watched_at])
+  @@index([watch_count])
+}
+model Ratings{
+  id String @id @default(uuid())
+  user_id String
+  media_id BigInt
+  rating Int
+  review_text String?
+  contains_spoilers Boolean @default(false)
+  created_at DateTime @default(now())
+  last_updated_at DateTime @updatedAt
+
+  // Relations 
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  media MediaCache @relation(fields: [media_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, media_id])
+  @@index([user_id])
+  @@index([media_id])
+  @@index([rating])
+  @@index([created_at])
+}
+model Notes{
+  id String @id @default(uuid())
+  user_id String
+  media_id BigInt
+  title String?
+  content String
+  is_public Boolean @default(false)
+  contains_spoilers Boolean @default(false)
+  created_at DateTime @default(now())
+  last_updated_at DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  media MediaCache @relation(fields: [media_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, media_id])
+  @@index([user_id])
+  @@index([media_id])
+  @@index([is_public])
+  @@index([created_at])
 }
