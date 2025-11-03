@@ -27,6 +27,11 @@ model User{
   timer_session TimerSession[]
   timer_history TimerHistory[]
   watch_istory WatchHistory[]
+  user_devices UserDevices[]
+  sync_sessions SyncSessions[]
+  pending_sync_actions PendingSyncActions[]
+  sync_conflicts SyncConflicts[]
+  resolved_conflicts SyncConflicts[] @relation("ConflictResolver")
 }
 
 model UserSettings{
@@ -359,4 +364,82 @@ model WatchHistory{
   @@index([activity_type])
   @@index([created_at])
   @@index([device_type])
+}
+
+model UserDevices{
+  id String @id @default(uuid())
+  user_id String
+  device_id String
+  device_name String
+  device_type String
+  platform String
+  last_seen_at DateTime @default(now())
+  last_sync_at DateTime @default(now())
+  created_at DateTime @default(now())
+
+  // Realtaions 
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  sync_sessions SyncSessions[]
+  pending_sync_actions PendingSyncActions[]
+}
+model SyncSessions{
+  id String @id @default(uuid())
+  user_id String
+  device_id String
+  token_hash String
+  is_active Boolean @default(true)
+  expires_at DateTime 
+  last_activity_at DateTime @default(now())
+  created_at DateTime @default(now())
+
+  // Realtaions 
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_devices UserDevices @relation(fields: [device_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([device_id])
+  @@index([is_active])
+  @@index([expires_at])
+  @@index([token_hash])
+}
+model PendingSyncActions{
+  id String @id @default(uuid())
+  user_id String
+  device_id String?
+  action_type String
+  entity_type String
+  action_data Json
+  is_synced Boolean @default(false)
+  created_at DateTime @default(now())
+  synced_at DateTime
+  
+  // Realtaions 
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_devices UserDevices? @relation(fields: [device_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([device_id])
+  @@index([entity_type])
+  @@index([is_synced])
+   @@index([created_at])
+}
+model SyncConflicts{
+  id String @id @default(uuid())
+  user_id String
+  entity_type String
+  entity_id String
+  conflict_data Json
+  resolved_by String?
+  resolution String?
+  resolved_at DateTime?
+  created_at DateTime @default(now())
+  
+  // Realtaions 
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  resolver User? @relation("ConflictResolver", fields: [resolved_by], references: [id])
+
+  @@index([user_id])
+  @@index([entity_type])
+  @@index([resolution])
+  @@index([created_at])
 }
