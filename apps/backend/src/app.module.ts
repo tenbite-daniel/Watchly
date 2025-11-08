@@ -7,6 +7,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { MediaModule } from './media/media.module';
 import { UserModule } from './user/user.module';
+import { TvModule } from './tv/tv.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './user/user.module';
     PrismaModule,
     MediaModule,
     UserModule,
+    TvModule,
   ],
   controllers: [AppController],
   providers: [AppService],
