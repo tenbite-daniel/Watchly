@@ -1,5 +1,6 @@
 import { ObjectType, Field, ID, Float, Int } from '@nestjs/graphql';
 import { GraphQLJSON } from 'graphql-type-json';
+import { TvSeason } from 'src/tv/entities/tv-season.entity';
 
 @ObjectType()
 export class MediaCache {
@@ -89,4 +90,7 @@ export class MediaCache {
 
   @Field()
   created_at: Date;
+
+  @Field(() => [TvSeason], { nullable: true })
+  tv_session: TvSeason[];
 }
