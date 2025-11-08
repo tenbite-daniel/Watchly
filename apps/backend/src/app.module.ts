@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { MediaModule } from './media/media.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { MediaModule } from './media/media.module';
     }),
     PrismaModule,
     MediaModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
