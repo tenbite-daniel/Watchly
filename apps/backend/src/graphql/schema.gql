@@ -87,6 +87,9 @@ type Query {
   mediaCollection: [MediaCollection!]!
   people: [PeopleCache!]!
   search: [SearchCache!]!
+  userDevices: [UserDevices!]!
+  userSettings: [UserSettings!]!
+  users: [User!]!
 }
 
 type SearchCache {
@@ -100,4 +103,42 @@ type SearchCache {
   search_type: String!
   total_pages: Int
   total_results: Int
+}
+
+type User {
+  avatar_url: String!
+  created_at: DateTime!
+  display_name: String!
+  email: String!
+  id: ID!
+  settings: UserSettings
+  timeZone: String!
+  updated_at: DateTime!
+  user_devices: [UserDevices!]
+  username: String!
+}
+
+type UserDevices {
+  created_at: DateTime!
+  device_id: String!
+  device_type: String!
+  id: ID!
+  last_seen_at: DateTime!
+  last_sync_at: DateTime!
+  platform: String!
+  user: User!
+  user_id: String!
+}
+
+type UserSettings {
+  auto_play_trailers: Boolean!
+  created_at: DateTime!
+  default_list_type: String!
+  email_updates: Boolean!
+  id: ID!
+  notifications_enabled: Boolean!
+  theme: String!
+  updated_at: DateTime!
+  user: User!
+  userId: String!
 }
