@@ -8,6 +8,9 @@ import { join } from 'path';
 import { MediaModule } from './media/media.module';
 import { UserModule } from './user/user.module';
 import { TvModule } from './tv/tv.module';
+import { ContentModule } from './content/content.module';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { SyncModule } from './sync/sync.module';
 
 @Module({
   imports: [
@@ -20,6 +23,9 @@ import { TvModule } from './tv/tv.module';
     MediaModule,
     UserModule,
     TvModule,
+    ContentModule,
+    AnalyticsModule,
+    SyncModule,
   ],
   controllers: [AppController],
   providers: [AppService],
