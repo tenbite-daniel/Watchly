@@ -7,14 +7,28 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Media {
+type GenresCache {
+  created_at: DateTime!
+  genre_id: Int!
+  id: ID!
+  last_updated_at: DateTime!
+  media_count: Int
+  name: String!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type MediaCache {
   adult: Boolean
   backdrop_path: String
   created_at: DateTime!
-  episode_run_time: [String!]
-  external_ids: [String!]
+  episode_run_time: JSON
+  external_ids: JSON
   first_air_date: DateTime
-  genres: [String!]
+  genres: JSON
   id: ID!
   in_production: Boolean
   is_manual_entry: Boolean!
@@ -26,19 +40,64 @@ type Media {
   origianl_title: String
   popularity: Float
   poster_path: String
-  production_companies: [String!]
+  production_companies: JSON
   release_date: String
   runtime: Int
   source_api: String!
   status: String
   tagline: String
   title: String!
-  trailer_urls: [String!]
+  trailer_urls: JSON
   type: String!
   vote_average: Float
   vote_count: Int
 }
 
+type MediaCollection {
+  backdrop_path: String
+  collection_date: JSON
+  collection_id: String!
+  created_at: DateTime!
+  id: ID!
+  last_fetched_at: DateTime!
+  media_ids: JSON
+  name: String!
+  overview: String
+  poster_path: String
+}
+
+type PeopleCache {
+  also_known_for: JSON
+  biography: String
+  birthday: Int
+  created_at: DateTime!
+  gender: Int
+  id: ID!
+  imdb_id: String
+  known_for_department: String
+  last_fetched_at: DateTime!
+  name: String!
+  place_of_birth: String
+  profile_path: String
+}
+
 type Query {
-  media: [Media!]!
+  genre: [GenresCache!]!
+  media: [MediaCache!]!
+  mediaCollection: [MediaCollection!]!
+  people: [PeopleCache!]!
+  search: [SearchCache!]!
+}
+
+type SearchCache {
+  created_at: DateTime!
+  expires_at: DateTime!
+  external_id: String
+  filter_hash: String
+  id: ID!
+  query_hash: String
+  results: JSON!
+  search_type: String!
+  total_pages: Int
+  total_results: Int
 }
