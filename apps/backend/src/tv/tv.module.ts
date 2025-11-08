@@ -1,8 +1,17 @@
 import { Module } from '@nestjs/common';
 import { TvService } from './tv.service';
-import { TvResolver } from './tv.resolver';
+import {
+  TvSeasonResolver,
+  TvEpisodeResolver,
+  EpisodeProgressResolver,
+} from './tv.resolver';
 
 @Module({
-  providers: [TvResolver, TvService],
+  providers: [
+    TvSeasonResolver,
+    TvEpisodeResolver,
+    EpisodeProgressResolver,
+    TvService,
+  ],
 })
 export class TvModule {}
