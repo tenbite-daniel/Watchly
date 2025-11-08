@@ -2,7 +2,7 @@ import { ObjectType, Field, ID, Float, Int } from '@nestjs/graphql';
 import { GraphQLJSON } from 'graphql-type-json';
 
 @ObjectType()
-export class Media {
+export class MediaCache {
   @Field(() => ID)
   id: string;
 

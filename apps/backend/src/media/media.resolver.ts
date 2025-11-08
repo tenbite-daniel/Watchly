@@ -1,12 +1,12 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { MediaService } from './media.service';
-import { Media } from './entities/media.entity';
+import { MediaCache } from './entities/media-cache.entity';
 
-@Resolver(() => Media)
+@Resolver(() => MediaCache)
 export class MediaResolver {
   constructor(private readonly mediaService: MediaService) {}
 
-  @Query(() => [Media], { name: 'media' })
+  @Query(() => [MediaCache], { name: 'media' })
   findAll() {
     return this.mediaService.findAll();
   }
