@@ -1,4 +1,6 @@
 import { ObjectType, Field, Int, ID, HideField } from '@nestjs/graphql';
+import { UserSettings } from './user-settings.entity';
+import { UserDevices } from './user-devices.entity';
 
 @ObjectType()
 export class User {
@@ -28,4 +30,10 @@ export class User {
 
   @Field()
   created_at: Date;
+
+  @Field(() => UserSettings, { nullable: true })
+  settings?: UserSettings;
+
+  @Field(() => [UserDevices], { nullable: true })
+  user_devices?: UserDevices[];
 }
