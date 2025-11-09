@@ -1,8 +1,27 @@
 import { Module } from '@nestjs/common';
-import { ContentService } from './content.service';
-import { ContentResolver } from './content.resolver';
+import {
+  ListService,
+  ListItemService,
+  RatingService,
+  NotesService,
+} from './content.service';
+import {
+  ListResolver,
+  ListItemResolver,
+  RatingsResolver,
+  NotesResolver,
+} from './content.resolver';
 
 @Module({
-  providers: [ContentResolver, ContentService],
+  providers: [
+    ListResolver,
+    ListItemResolver,
+    RatingsResolver,
+    NotesResolver,
+    ListService,
+    ListItemService,
+    RatingService,
+    NotesService,
+  ],
 })
 export class ContentModule {}

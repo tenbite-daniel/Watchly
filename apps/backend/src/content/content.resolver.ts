@@ -1,35 +1,48 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { ContentService } from './content.service';
-import { Content } from './entities/content.entity';
-import { CreateContentInput } from './dto/create-content.input';
-import { UpdateContentInput } from './dto/update-content.input';
+import {
+  ListService,
+  ListItemService,
+  RatingService,
+  NotesService,
+} from './content.service';
+import { Lists } from './entities/lists.entity';
+import { ListItems } from './entities/list-item.entity';
+import { Ratings } from './entities/ratings.entity';
+import { Notes } from './entities/notes.entity';
 
-@Resolver(() => Content)
-export class ContentResolver {
-  constructor(private readonly contentService: ContentService) {}
+@Resolver(() => Lists)
+export class ListResolver {
+  constructor(private readonly contentService: ListService) {}
 
-  @Mutation(() => Content)
-  createContent(@Args('createContentInput') createContentInput: CreateContentInput) {
-    return this.contentService.create(createContentInput);
-  }
-
-  @Query(() => [Content], { name: 'content' })
+  @Query(() => [Lists], { name: 'lists' })
   findAll() {
     return this.contentService.findAll();
   }
+}
+@Resolver(() => ListItems)
+export class ListItemResolver {
+  constructor(private readonly contentService: ListItemService) {}
 
-  @Query(() => Content, { name: 'content' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.contentService.findOne(id);
+  @Query(() => [ListItems], { name: 'listItems' })
+  findAll() {
+    return this.contentService.findAll();
   }
+}
+@Resolver(() => Ratings)
+export class RatingsResolver {
+  constructor(private readonly contentService: RatingService) {}
 
-  @Mutation(() => Content)
-  updateContent(@Args('updateContentInput') updateContentInput: UpdateContentInput) {
-    return this.contentService.update(updateContentInput.id, updateContentInput);
+  @Query(() => [Ratings], { name: 'ratings' })
+  findAll() {
+    return this.contentService.findAll();
   }
+}
+@Resolver(() => Notes)
+export class NotesResolver {
+  constructor(private readonly contentService: NotesService) {}
 
-  @Mutation(() => Content)
-  removeContent(@Args('id', { type: () => Int }) id: number) {
-    return this.contentService.remove(id);
+  @Query(() => [Notes], { name: 'notes' })
+  findAll() {
+    return this.contentService.findAll();
   }
 }
