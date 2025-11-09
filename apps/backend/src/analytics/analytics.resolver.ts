@@ -1,35 +1,39 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { AnalyticsService } from './analytics.service';
-import { Analytics } from './entities/analytics.entity';
-import { CreateAnalyticsInput } from './dto/create-analytics.input';
-import { UpdateAnalyticsInput } from './dto/update-analytics.input';
+import {
+  TimerSessionService,
+  TimerHistoryService,
+  WatchHistoryService,
+} from './analytics.service';
+import { TimerHistory } from './entities/timer-history.entity';
+import { TimerSession } from './entities/timer-session.entity';
+import { WatchHistory } from './entities/watch-history.entity';
 
-@Resolver(() => Analytics)
-export class AnalyticsResolver {
-  constructor(private readonly analyticsService: AnalyticsService) {}
+@Resolver(() => TimerSession)
+export class TimerSessionResolver {
+  constructor(private readonly analyticsService: TimerSessionService) {}
 
-  @Mutation(() => Analytics)
-  createAnalytics(@Args('createAnalyticsInput') createAnalyticsInput: CreateAnalyticsInput) {
-    return this.analyticsService.create(createAnalyticsInput);
-  }
-
-  @Query(() => [Analytics], { name: 'analytics' })
+  @Query(() => [TimerSession], { name: 'timerSession' })
   findAll() {
     return this.analyticsService.findAll();
   }
+}
 
-  @Query(() => Analytics, { name: 'analytics' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.analyticsService.findOne(id);
+@Resolver(() => TimerHistory)
+export class TimerHistoryResolver {
+  constructor(private readonly analyticsService: TimerHistoryService) {}
+
+  @Query(() => [TimerHistory], { name: 'timerHistory' })
+  findAll() {
+    return this.analyticsService.findAll();
   }
+}
 
-  @Mutation(() => Analytics)
-  updateAnalytics(@Args('updateAnalyticsInput') updateAnalyticsInput: UpdateAnalyticsInput) {
-    return this.analyticsService.update(updateAnalyticsInput.id, updateAnalyticsInput);
-  }
+@Resolver(() => WatchHistory)
+export class WatchHistoryResolver {
+  constructor(private readonly analyticsService: WatchHistoryService) {}
 
-  @Mutation(() => Analytics)
-  removeAnalytics(@Args('id', { type: () => Int }) id: number) {
-    return this.analyticsService.remove(id);
+  @Query(() => [WatchHistory], { name: 'watchHistory' })
+  findAll() {
+    return this.analyticsService.findAll();
   }
 }

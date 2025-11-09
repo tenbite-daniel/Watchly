@@ -1,8 +1,23 @@
 import { Module } from '@nestjs/common';
-import { AnalyticsService } from './analytics.service';
-import { AnalyticsResolver } from './analytics.resolver';
+import {
+  TimerSessionService,
+  TimerHistoryService,
+  WatchHistoryService,
+} from './analytics.service';
+import {
+  TimerSessionResolver,
+  TimerHistoryResolver,
+  WatchHistoryResolver,
+} from './analytics.resolver';
 
 @Module({
-  providers: [AnalyticsResolver, AnalyticsService],
+  providers: [
+    TimerSessionService,
+    TimerHistoryService,
+    WatchHistoryService,
+    TimerSessionResolver,
+    TimerHistoryResolver,
+    WatchHistoryResolver,
+  ],
 })
 export class AnalyticsModule {}
