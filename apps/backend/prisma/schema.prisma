@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -8,84 +7,79 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id String @id @default(uuid())
-  email String @unique
-  username String 
-  display_name String?
-  avatar_url String? 
-  password String
-  timeZone String?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  // Relations
-  settings UserSettings?
-  lists Lists[]
-  ratings Ratings[]
-  notes Notes[]
-  timer_session TimerSession[]
-  timer_history TimerHistory[]
-  watch_history WatchHistory[]
-  user_devices UserDevices[]
-  sync_sessions SyncSessions[]
+model User {
+  id                   String               @id @default(uuid())
+  email                String               @unique
+  username             String
+  display_name         String?
+  avatar_url           String?
+  password             String
+  timeZone             String?
+  created_at           DateTime             @default(now())
+  updated_at           DateTime             @updatedAt
+  episode_progress     EpisodeProgress[]
+  lists                Lists[]
+  notes                Notes[]
   pending_sync_actions PendingSyncActions[]
-  sync_conflicts SyncConflicts[]
-  resolved_conflicts SyncConflicts[] @relation("ConflictResolver")
+  ratings              Ratings[]
+  resolved_conflicts   SyncConflicts[]      @relation("ConflictResolver")
+  sync_conflicts       SyncConflicts[]
+  sync_sessions        SyncSessions[]
+  timer_history        TimerHistory[]
+  timer_session        TimerSession?
+  user_devices         UserDevices[]
+  settings             UserSettings?
+  watch_history        WatchHistory[]
 }
 
-model UserSettings{
-  id String @id @default(uuid())
-  userId String @unique
-  notifications_enabled Boolean @default(true)
-  email_updates Boolean @default(true)
-  auto_play_trailers Boolean @default(true)
-  default_list_type String @default("watchlist")
-  theme String @default("dark")
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+model UserSettings {
+  id                    String   @id @default(uuid())
+  notifications_enabled Boolean  @default(true)
+  email_updates         Boolean  @default(true)
+  auto_play_trailers    Boolean  @default(true)
+  default_list_type     String   @default("watchlist")
+  theme                 String   @default("dark")
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
+  user_id               String   @unique
+  user                  User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-model MediaCache{
-  id BigInt @id
-  type String
-  title String
-  original_title String?
-  overview String?
-  tagline String?
-  poster_path String?
-  backdrop_path String?
-  release_date DateTime?
-  first_air_date DateTime?
-  status String?
-  popularity Float?
-  vote_average Float?
-  vote_count Int?
-  original_language String?
-  adult Boolean @default(false)
-  genres Json?
+model MediaCache {
+  id                   BigInt     @id
+  type                 String
+  title                String
+  original_title       String?
+  overview             String?
+  tagline              String?
+  poster_path          String?
+  backdrop_path        String?
+  release_date         DateTime?
+  first_air_date       DateTime?
+  status               String?
+  popularity           Float?
+  vote_average         Float?
+  vote_count           Int?
+  original_language    String?
+  adult                Boolean    @default(false)
+  genres               Json?
   production_companies Json?
-  runtime Int?
-  number_of_seasons Int?
-  number_of_episodes Int?
-  episode_run_time Json?
-  in_production Boolean?
-  last_air_date DateTime?
-  trailer_urls Json?
-  external_ids Json?
-  is_manual_entry Boolean @default(false)
-  source_api String @default("tmdb")
-  last_fetched_at DateTime @default(now())
-  created_at DateTime @default(now())
-
-  // Relations
-  tv_seasons TvSeason[]
-  list_items ListItem[]
-  ratings Ratings[]
-  notes Notes[]
+  runtime              Int?
+  number_of_seasons    Int?
+  number_of_episodes   Int?
+  episode_run_time     Json?
+  in_production        Boolean?
+  last_air_date        DateTime?
+  trailer_urls         Json?
+  external_ids         Json?
+  is_manual_entry      Boolean    @default(false)
+  source_api           String     @default("tmdb")
+  last_fetched_at      DateTime   @default(now())
+  created_at           DateTime   @default(now())
+  list_items           ListItem[]
+  notes                Notes[]
+  ratings              Ratings[]
+  tv_seasons           TvSeason[]
 
   @@index([type])
   @@index([popularity])
@@ -93,110 +87,106 @@ model MediaCache{
   @@index([last_fetched_at])
 }
 
-model SearchCache{
-  id String @id @default(uuid())
-  query_hash String?
-  filter_hash String?
-  external_id String?
-  search_type String
-  results Json
+model SearchCache {
+  id            String   @id @default(uuid())
+  query_hash    String?
+  filter_hash   String?
+  external_id   String?
+  search_type   String
+  results       Json
   total_results Int?
-  total_pages Int?
-  created_at DateTime @default(now())
-  expires_at DateTime
+  total_pages   Int?
+  created_at    DateTime @default(now())
+  expires_at    DateTime
 
   @@index([query_hash, expires_at])
   @@index([filter_hash, expires_at])
 }
 
-model PeopleCache{
-  id BigInt @id
-  name String
-  also_known_for Json?
-  gender Int? // 0=U, 1=F, 2=M
+model PeopleCache {
+  id                   BigInt    @id
+  name                 String
+  also_known_for       Json?
+  gender               Int?
   known_for_department String?
-  biography String?
-  birthday DateTime?
-  place_of_birth String?
-  profile_path String?
-  imdb_id String?
-  last_fetched_at DateTime @default(now())
-  created_at DateTime @default(now())
+  biography            String?
+  birthday             DateTime?
+  place_of_birth       String?
+  profile_path         String?
+  imdb_id              String?
+  last_fetched_at      DateTime  @default(now())
+  created_at           DateTime  @default(now())
 
   @@index([name])
   @@index([last_fetched_at])
 }
 
-model GenresCache{
-  id String @id @default(uuid())
-  genre_id Int
-  name String
-  media_count Int?
+model GenresCache {
+  id              String   @id @default(uuid())
+  genre_id        Int
+  name            String
+  media_count     Int?
   last_updated_at DateTime
-  created_at DateTime @default(now())
+  created_at      DateTime @default(now())
 
   @@index([genre_id])
   @@index([name])
   @@index([last_updated_at])
 }
 
-model MediaCollections{
-  id String @id @default(uuid())
-  collection_id BigInt
-  name String
-  overview String?
-  poster_path String?
-  backdrop_path String?
-  media_ids Json?
+model MediaCollection {
+  id              String   @id @default(uuid())
+  collection_id   BigInt
+  name            String
+  overview        String?
+  poster_path     String?
+  backdrop_path   String?
+  media_ids       Json?
   collection_data Json?
   last_fetched_at DateTime
-  created_at DateTime @default(now())
+  created_at      DateTime @default(now())
 
   @@index([collection_id])
   @@index([name])
   @@index([last_fetched_at])
 }
 
-model TvSeason{
-  id String @id @default(uuid())
-  media_id BigInt
+model TvSeason {
+  id            String      @id @default(uuid())
+  media_id      BigInt
   season_number Int
-  name String?
-  overview String?
-  air_date DateTime?
+  name          String?
+  overview      String?
+  air_date      DateTime?
   episode_count Int?
-  poster_path String?
-  season_data Json?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  // Relations 
-  media MediaCache @relation(fields: [media_id], references: [id], onDelete: Cascade)
-  episodes TvEpisode[]
+  poster_path   String?
+  season_data   Json?
+  created_at    DateTime    @default(now())
+  updated_at    DateTime    @updatedAt
+  episodes      TvEpisode[]
+  media         MediaCache  @relation(fields: [media_id], references: [id], onDelete: Cascade)
 
   @@index([media_id, season_number])
   @@index([media_id])
   @@index([season_number])
 }
 
-model TvEpisode{
-  id String @id @default(uuid())
-  season_id String
-  episode_number Int
-  name String?
-  overview String?
-  air_date DateTime?
-  runtime Int?
-  still_path String?
-  vote_average Float?
-  vote_count Int?
-  episode_data Json?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  // Relations
-  season TvSeason @relation(fields: [season_id], references: [id], onDelete: Cascade)
+model TvEpisode {
+  id               String            @id @default(uuid())
+  season_id        String
+  episode_number   Int
+  name             String?
+  overview         String?
+  air_date         DateTime?
+  runtime          Int?
+  still_path       String?
+  vote_average     Float?
+  vote_count       Int?
+  episode_data     Json?
+  created_at       DateTime          @default(now())
+  updated_at       DateTime          @updatedAt
   episode_progress EpisodeProgress[]
+  season           TvSeason          @relation(fields: [season_id], references: [id], onDelete: Cascade)
 
   @@index([season_id, episode_number])
   @@index([season_id])
@@ -204,18 +194,17 @@ model TvEpisode{
   @@index([air_date])
 }
 
-model EpisodeProgress{
-  id String @id @default(uuid())
-  user_id String
-  episode_id String
-  last_watched_timestamp Int @default(0)
-  episode_duration Int?
-  status String @default("unwatched")
-  created_at DateTime @default(now())
-  last_updated_at DateTime @default(now())
-
-  // Relations
-  episode TvEpisode @relation(fields: [episode_id], references: [id], onDelete: Cascade)
+model EpisodeProgress {
+  id                     String    @id @default(uuid())
+  user_id                String
+  episode_id             String
+  last_watched_timestamp Int       @default(0)
+  episode_duration       Int?
+  status                 String    @default("unwatched")
+  created_at             DateTime  @default(now())
+  last_updated_at        DateTime  @default(now())
+  episode                TvEpisode @relation(fields: [episode_id], references: [id], onDelete: Cascade)
+  user                   User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, episode_id])
   @@index([user_id])
@@ -224,39 +213,36 @@ model EpisodeProgress{
   @@index([last_updated_at])
 }
 
-model Lists{
-  id String @id @default(uuid())
-  user_id String
-  list_type String
-  name String?
-  is_public Boolean @default(false)
-  sort_order String @default("added_date")
-  created_at DateTime @default(now())
-  last_updated_at DateTime @updatedAt
-
-  // Relaions 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  list_items ListItem[]
+model Lists {
+  id              String     @id @default(uuid())
+  user_id         String
+  list_type       String
+  name            String?
+  is_public       Boolean    @default(false)
+  sort_order      String     @default("added_date")
+  created_at      DateTime   @default(now())
+  last_updated_at DateTime   @updatedAt
+  list_items      ListItem[]
+  user            User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, list_type, name])
   @@index([user_id])
   @@index([list_type])
   @@index([is_public])
 }
-model ListItem{
-  id String @id @default(uuid())
-  list_id String
-  media_id BigInt
-  progress Json? @default("{}")
-  watch_count Int @default(0)
-  last_watched_at DateTime?
-  created_at DateTime @default(now())
-  last_updated_at DateTime @updatedAt
 
-  // Relations
-  lists Lists @relation(fields: [list_id], references: [id], onDelete: Cascade)
-  media MediaCache @relation(fields: [media_id], references: [id], onDelete: Cascade)
-  watch_history WatchHistory[]
+model ListItem {
+  id              String         @id @default(uuid())
+  list_id         String
+  media_id        BigInt
+  progress        Json?          @default("{}")
+  watch_count     Int            @default(0)
+  last_watched_at DateTime?
+  created_at      DateTime       @default(now())
+  last_updated_at DateTime       @updatedAt
+  lists           Lists          @relation(fields: [list_id], references: [id], onDelete: Cascade)
+  media           MediaCache     @relation(fields: [media_id], references: [id], onDelete: Cascade)
+  watch_history   WatchHistory[]
 
   @@unique([list_id, media_id])
   @@index([list_id])
@@ -264,19 +250,18 @@ model ListItem{
   @@index([last_watched_at])
   @@index([watch_count])
 }
-model Ratings{
-  id String @id @default(uuid())
-  user_id String
-  media_id BigInt
-  rating Int
-  review_text String?
-  contains_spoilers Boolean @default(false)
-  created_at DateTime @default(now())
-  last_updated_at DateTime @updatedAt
 
-  // Relations 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  media MediaCache @relation(fields: [media_id], references: [id], onDelete: Cascade)
+model Ratings {
+  id                String     @id @default(uuid())
+  user_id           String
+  media_id          BigInt
+  rating            Int
+  review_text       String?
+  contains_spoilers Boolean    @default(false)
+  created_at        DateTime   @default(now())
+  last_updated_at   DateTime   @updatedAt
+  media             MediaCache @relation(fields: [media_id], references: [id], onDelete: Cascade)
+  user              User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, media_id])
   @@index([user_id])
@@ -284,20 +269,19 @@ model Ratings{
   @@index([rating])
   @@index([created_at])
 }
-model Notes{
-  id String @id @default(uuid())
-  user_id String
-  media_id BigInt
-  title String?
-  content String
-  is_public Boolean @default(false)
-  contains_spoilers Boolean @default(false)
-  created_at DateTime @default(now())
-  last_updated_at DateTime @updatedAt
 
-  // Relations
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  media MediaCache @relation(fields: [media_id], references: [id], onDelete: Cascade)
+model Notes {
+  id                String     @id @default(uuid())
+  user_id           String
+  media_id          BigInt
+  title             String?
+  content           String
+  is_public         Boolean    @default(false)
+  contains_spoilers Boolean    @default(false)
+  created_at        DateTime   @default(now())
+  last_updated_at   DateTime   @updatedAt
+  media             MediaCache @relation(fields: [media_id], references: [id], onDelete: Cascade)
+  user              User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, media_id])
   @@index([user_id])
@@ -306,36 +290,32 @@ model Notes{
   @@index([created_at])
 }
 
-model TimerSession{
-  id String @id @default(uuid())
-  user_id String @unique
-  total_seconds Int @default(7200)
-  remaining_seconds Int @default(7200)
-  is_paused Boolean @default(true)
-  last_started_at DateTime?
-  daily_reset_time String @default("12:00:00")
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  // Relations 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  timer_history TimerHistory[]
+model TimerSession {
+  id                String         @id @default(uuid())
+  user_id           String         @unique
+  total_seconds     Int            @default(7200)
+  remaining_seconds Int            @default(7200)
+  is_paused         Boolean        @default(true)
+  last_started_at   DateTime?
+  daily_reset_time  String         @default("12:00:00")
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+  timer_history     TimerHistory[]
+  user              User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
   @@index([is_paused])
 }
 
-model TimerHistory{
-  id String @id @default(uuid())
-  user_id String 
-  session_id String
-  seconds_used Int
+model TimerHistory {
+  id            String       @id @default(uuid())
+  user_id       String
+  session_id    String
+  seconds_used  Int
   activity_date DateTime
-  created_at DateTime @default(now())
-
-  // Relations
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  session TimerSession @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  created_at    DateTime     @default(now())
+  session       TimerSession @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  user          User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, activity_date])
   @@index([user_id])
@@ -343,21 +323,19 @@ model TimerHistory{
   @@index([activity_date])
 }
 
-model WatchHistory{
-  id String @id @default(uuid())
-  user_id String
-  list_item_id String
-  activity_type String
-  progress_data Json?
-  metadata Json?
-  device_type String?
+model WatchHistory {
+  id               String   @id @default(uuid())
+  user_id          String
+  list_item_id     String
+  activity_type    String
+  progress_data    Json?
+  metadata         Json?
+  device_type      String?
   session_duration Int?
-  platform String?
-  created_at DateTime @default(now())
-
-  // Relations
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  list_item ListItem @relation(fields: [list_item_id], references: [id], onDelete: Cascade)
+  platform         String?
+  created_at       DateTime @default(now())
+  list_item        ListItem @relation(fields: [list_item_id], references: [id], onDelete: Cascade)
+  user             User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
   @@index([list_item_id])
@@ -366,35 +344,32 @@ model WatchHistory{
   @@index([device_type])
 }
 
-model UserDevices{
-  id String @id @default(uuid())
-  user_id String
-  device_id String
-  device_name String
-  device_type String
-  platform String
-  last_seen_at DateTime @default(now())
-  last_sync_at DateTime @default(now())
-  created_at DateTime @default(now())
-
-  // Realtaions 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  sync_sessions SyncSessions[]
+model UserDevices {
+  id                   String               @id @default(uuid())
+  user_id              String
+  device_id            String
+  device_name          String
+  device_type          String
+  platform             String
+  last_seen_at         DateTime             @default(now())
+  last_sync_at         DateTime             @default(now())
+  created_at           DateTime             @default(now())
   pending_sync_actions PendingSyncActions[]
+  sync_sessions        SyncSessions[]
+  user                 User                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
-model SyncSessions{
-  id String @id @default(uuid())
-  user_id String
-  device_id String
-  token_hash String
-  is_active Boolean @default(true)
-  expires_at DateTime 
-  last_activity_at DateTime @default(now())
-  created_at DateTime @default(now())
 
-  // Realtaions 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_devices UserDevices @relation(fields: [device_id], references: [id], onDelete: Cascade)
+model SyncSessions {
+  id               String      @id @default(uuid())
+  user_id          String
+  device_id        String
+  token_hash       String
+  is_active        Boolean     @default(true)
+  expires_at       DateTime
+  last_activity_at DateTime    @default(now())
+  created_at       DateTime    @default(now())
+  user_devices     UserDevices @relation(fields: [device_id], references: [id], onDelete: Cascade)
+  user             User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
   @@index([device_id])
@@ -402,41 +377,39 @@ model SyncSessions{
   @@index([expires_at])
   @@index([token_hash])
 }
-model PendingSyncActions{
-  id String @id @default(uuid())
-  user_id String
-  device_id String?
-  action_type String
-  entity_type String
-  action_data Json
-  is_synced Boolean @default(false)
-  created_at DateTime @default(now())
-  synced_at DateTime
-  
-  // Realtaions 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+model PendingSyncActions {
+  id           String       @id @default(uuid())
+  user_id      String
+  device_id    String?
+  action_type  String
+  entity_type  String
+  action_data  Json
+  is_synced    Boolean      @default(false)
+  created_at   DateTime     @default(now())
+  synced_at    DateTime?
   user_devices UserDevices? @relation(fields: [device_id], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
   @@index([device_id])
   @@index([entity_type])
   @@index([is_synced])
-   @@index([created_at])
+  @@index([created_at])
 }
-model SyncConflicts{
-  id String @id @default(uuid())
-  user_id String
-  entity_type String
-  entity_id String
+
+model SyncConflicts {
+  id            String    @id @default(uuid())
+  user_id       String
+  entity_type   String
+  entity_id     String
   conflict_data Json
-  resolved_by String?
-  resolution String?
-  resolved_at DateTime?
-  created_at DateTime @default(now())
-  
-  // Realtaions 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  resolver User? @relation("ConflictResolver", fields: [resolved_by], references: [id])
+  resolved_by   String?
+  resolution    String?
+  resolved_at   DateTime?
+  created_at    DateTime  @default(now())
+  resolver      User?     @relation("ConflictResolver", fields: [resolved_by], references: [id])
+  user          User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
   @@index([entity_type])
