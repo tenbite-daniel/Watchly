@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, ID, Float } from '@nestjs/graphql';
+import { ObjectType, Field, HideField, Int, ID, Float } from '@nestjs/graphql';
 import { GraphQLJSON } from 'graphql-type-json';
 import { TvSeason } from './tv-season.entity';
 import { EpisodeProgress } from './episode-progress.entity';
@@ -8,7 +8,7 @@ export class TvEpisode {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @HideField()
   season_id: string;
 
   @Field(() => Int)
@@ -36,7 +36,7 @@ export class TvEpisode {
   vote_count?: number;
 
   @Field(() => GraphQLJSON, { nullable: true })
-  episode_data: any;
+  episode_data?: any;
 
   @Field()
   updated_at: Date;
@@ -45,7 +45,7 @@ export class TvEpisode {
   created_at: Date;
 
   @Field(() => TvSeason)
-  tv_season: TvSeason;
+  season: TvSeason;
 
   @Field(() => [EpisodeProgress], { nullable: true })
   episode_progress?: EpisodeProgress[];

@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { ObjectType, Field, Int, ID, HideField } from '@nestjs/graphql';
 import { MediaCache } from 'src/media/entities/media-cache.entity';
 import { User } from 'src/user/entities/user.entity';
 
@@ -7,10 +7,10 @@ export class Ratings {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @HideField()
   user_id: string;
 
-  @Field()
+  @HideField()
   media_id: string;
 
   @Field(() => Int)

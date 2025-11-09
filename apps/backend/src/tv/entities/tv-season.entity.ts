@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { ObjectType, Field, HideField, Int, ID } from '@nestjs/graphql';
 import { GraphQLJSON } from 'graphql-type-json';
 import { MediaCache } from 'src/media/entities/media-cache.entity';
 import { TvEpisode } from './tv-episode.entity';
@@ -8,7 +8,7 @@ export class TvSeason {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @HideField()
   media_id: string;
 
   @Field(() => Int)
@@ -42,5 +42,5 @@ export class TvSeason {
   media: MediaCache;
 
   @Field(() => [TvEpisode], { nullable: true })
-  tv_episode: TvEpisode[];
+  episodes: TvEpisode[];
 }

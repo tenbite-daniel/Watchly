@@ -1,18 +1,18 @@
-import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { ObjectType, Field, HideField, Int, ID } from '@nestjs/graphql';
 import { GraphQLJSON } from 'graphql-type-json';
 import { Lists } from './lists.entity';
 import { MediaCache } from 'src/media/entities/media-cache.entity';
 import { WatchHistory } from 'src/analytics/entities/watch-history.entity';
 
 @ObjectType()
-export class ListItems {
+export class ListItem {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @HideField()
   list_id: string;
 
-  @Field()
+  @HideField()
   media_id: string;
 
   @Field(() => GraphQLJSON, { nullable: true })
@@ -21,8 +21,8 @@ export class ListItems {
   @Field(() => Int)
   watch_count: number;
 
-  @Field()
-  last_watched_at: Date;
+  @Field({ nullable: true })
+  last_watched_at?: Date;
 
   @Field()
   last_updated_at: Date;
@@ -31,7 +31,7 @@ export class ListItems {
   created_at: Date;
 
   @Field(() => Lists, { nullable: true })
-  lists?: Lists;
+  list?: Lists;
 
   @Field(() => MediaCache, { nullable: true })
   media?: MediaCache;

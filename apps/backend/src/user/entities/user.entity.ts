@@ -10,11 +10,12 @@ import { WatchHistory } from 'src/analytics/entities/watch-history.entity';
 import { SyncSessions } from 'src/sync/entities/sync-sessions.entity';
 import { PendingSyncActions } from 'src/sync/entities/pending-sync-actions.entity';
 import { SyncConflicts } from 'src/sync/entities/sync-conflicts.entity';
+import { EpisodeProgress } from 'src/tv/entities/episode-progress.entity';
 
 @ObjectType()
 export class User {
   @Field(() => ID)
-  id: String;
+  id: string;
 
   @Field()
   email: string;
@@ -22,16 +23,16 @@ export class User {
   @Field()
   username: string;
 
-  @Field()
+  @Field({ nullable: true })
   display_name?: string;
 
-  @Field()
+  @Field({ nullable: true })
   avatar_url?: string;
 
   @HideField()
   password: string;
 
-  @Field()
+  @Field({ nullable: true })
   timeZone?: string;
 
   @Field()
@@ -75,4 +76,7 @@ export class User {
 
   @Field(() => [SyncConflicts], { nullable: true })
   resolved_conflicts?: SyncConflicts[];
+
+  @Field(() => [EpisodeProgress], { nullable: true })
+  episode_progress?: EpisodeProgress[];
 }

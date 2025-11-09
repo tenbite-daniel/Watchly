@@ -21,7 +21,7 @@ export class PeopleCache {
   @Field({ nullable: true })
   biography?: string;
 
-  @Field(() => Int, { nullable: true })
+  @Field({ nullable: true })
   birthday?: Date;
 
   @Field({ nullable: true })

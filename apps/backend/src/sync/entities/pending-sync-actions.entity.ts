@@ -26,8 +26,8 @@ export class PendingSyncActions {
   @Field(() => Boolean)
   is_synced: boolean;
 
-  @Field()
-  synced_at: Date;
+  @Field({ nullable: true })
+  synced_at?: Date;
 
   @Field()
   created_at: Date;

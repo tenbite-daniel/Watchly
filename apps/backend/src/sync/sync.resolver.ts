@@ -1,34 +1,34 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { SyncService } from './sync.service';
-import { Sync } from './entities/sync.entity';
+import { SyncSessions } from './entities/sync-sessions.entity';
 import { CreateSyncInput } from './dto/create-sync.input';
 import { UpdateSyncInput } from './dto/update-sync.input';
 
-@Resolver(() => Sync)
+@Resolver(() => SyncSessions)
 export class SyncResolver {
   constructor(private readonly syncService: SyncService) {}
 
-  @Mutation(() => Sync)
+  @Mutation(() => SyncSessions)
   createSync(@Args('createSyncInput') createSyncInput: CreateSyncInput) {
     return this.syncService.create(createSyncInput);
   }
 
-  @Query(() => [Sync], { name: 'sync' })
+  @Query(() => [SyncSessions], { name: 'sync' })
   findAll() {
     return this.syncService.findAll();
   }
 
-  @Query(() => Sync, { name: 'sync' })
+  @Query(() => SyncSessions, { name: 'sync' })
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.syncService.findOne(id);
   }
 
-  @Mutation(() => Sync)
+  @Mutation(() => SyncSessions)
   updateSync(@Args('updateSyncInput') updateSyncInput: UpdateSyncInput) {
     return this.syncService.update(updateSyncInput.id, updateSyncInput);
   }
 
-  @Mutation(() => Sync)
+  @Mutation(() => SyncSessions)
   removeSync(@Args('id', { type: () => Int }) id: number) {
     return this.syncService.remove(id);
   }

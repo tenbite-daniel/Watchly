@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { User } from 'src/user/entities/user.entity';
-import { ListItems } from 'src/content/entities/list-item.entity';
+import { ListItem } from 'src/content/entities/list-item.entity';
 import { GraphQLJSON } from 'graphql-type-json';
 
 @ObjectType()
@@ -24,7 +24,7 @@ export class WatchHistory {
   metadata?: any;
 
   @Field({ nullable: true })
-  device_type?: Date;
+  device_type?: string;
 
   @Field(() => Int, { nullable: true })
   session_duration?: number;
@@ -38,6 +38,6 @@ export class WatchHistory {
   @Field(() => User)
   user: User;
 
-  @Field(() => ListItems)
-  list_item: ListItems;
+  @Field(() => ListItem)
+  list_item: ListItem;
 }

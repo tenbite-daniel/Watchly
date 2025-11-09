@@ -25,8 +25,8 @@ export class SyncConflicts {
   @Field({ nullable: true })
   resolution?: string;
 
-  @Field()
-  resolved_at: Date;
+  @Field({ nullable: true })
+  resolved_at?: Date;
 
   @Field()
   created_at: Date;

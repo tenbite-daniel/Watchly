@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID, Float, Int } from '@nestjs/graphql';
+import { ObjectType, Field, ID, Float, Int, HideField } from '@nestjs/graphql';
 import { GraphQLJSON } from 'graphql-type-json';
 
 @ObjectType()
@@ -6,7 +6,7 @@ export class MediaCollection {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @HideField()
   collection_id: string;
 
   @Field()
@@ -25,7 +25,7 @@ export class MediaCollection {
   media_ids: any;
 
   @Field(() => GraphQLJSON, { nullable: true })
-  collection_date: any;
+  collection_data: any;
 
   @Field()
   last_fetched_at: Date;

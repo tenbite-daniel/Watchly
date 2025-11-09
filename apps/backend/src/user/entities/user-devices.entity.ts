@@ -1,16 +1,21 @@
 import { ObjectType, Field, Int, ID, HideField } from '@nestjs/graphql';
 import { User } from './user.entity';
+import { PendingSyncActions } from 'src/sync/entities/pending-sync-actions.entity';
+import { SyncSessions } from 'src/sync/entities/sync-sessions.entity';
 
 @ObjectType()
 export class UserDevices {
   @Field(() => ID)
-  id: String;
+  id: string;
 
   @Field()
   user_id: string;
 
   @Field()
   device_id: string;
+
+  @Field()
+  device_name: string;
 
   @Field()
   device_type: string;
@@ -29,4 +34,10 @@ export class UserDevices {
 
   @Field(() => User)
   user: User;
+
+  @Field(() => [SyncSessions], { nullable: true })
+  sync_sessions?: SyncSessions[];
+
+  @Field(() => [PendingSyncActions], { nullable: true })
+  pending_sync_actions?: PendingSyncActions[];
 }

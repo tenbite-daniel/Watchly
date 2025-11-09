@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { ObjectType, Field, Int, ID, HideField } from '@nestjs/graphql';
 import { TimerHistory } from './timer-history.entity';
 import { User } from 'src/user/entities/user.entity';
 
@@ -7,7 +7,7 @@ export class TimerSession {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @HideField()
   user_id: string;
 
   @Field(() => Int)
@@ -19,8 +19,8 @@ export class TimerSession {
   @Field(() => Boolean)
   is_paused: boolean;
 
-  @Field()
-  last_started_at: Date;
+  @Field({ nullable: true })
+  last_started_at?: Date;
 
   @Field()
   daily_reset_time: string;
@@ -34,6 +34,6 @@ export class TimerSession {
   @Field(() => User)
   user: User;
 
-  @Field(() => [TimerHistory])
-  session: TimerHistory[];
+  @Field(() => [TimerHistory], { nullable: true })
+  timer_history?: TimerHistory[];
 }

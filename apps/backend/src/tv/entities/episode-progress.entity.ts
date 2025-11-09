@@ -1,15 +1,16 @@
-import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { ObjectType, Field, HideField, Int, ID } from '@nestjs/graphql';
 import { TvEpisode } from './tv-episode.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @ObjectType()
 export class EpisodeProgress {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @HideField()
   user_id: string;
 
-  @Field()
+  @HideField()
   episode_id: string;
 
   @Field(() => Int)
@@ -27,6 +28,9 @@ export class EpisodeProgress {
   @Field()
   created_at: Date;
 
-  @Field(() => TvEpisode)
-  tv_episode: TvEpisode;
+  @Field(() => TvEpisode, { nullable: true })
+  episode: TvEpisode;
+
+  @Field(() => User, { nullable: true })
+  user?: User;
 }

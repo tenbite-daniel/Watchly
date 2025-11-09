@@ -1,13 +1,13 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ObjectType, Field, HideField, ID } from '@nestjs/graphql';
 import { User } from 'src/user/entities/user.entity';
-import { ListItems } from './list-item.entity';
+import { ListItem } from './list-item.entity';
 
 @ObjectType()
 export class Lists {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @HideField()
   user_id: string;
 
   @Field()
@@ -31,6 +31,6 @@ export class Lists {
   @Field(() => User, { nullable: true })
   user?: User;
 
-  @Field(() => [ListItems], { nullable: true })
-  list_items?: ListItems[];
+  @Field(() => [ListItem], { nullable: true })
+  list_items?: ListItem[];
 }

@@ -4,10 +4,10 @@ import { User } from './user.entity';
 @ObjectType()
 export class UserSettings {
   @Field(() => ID)
-  id: String;
+  id: string;
 
-  @Field()
-  userId: string;
+  @HideField()
+  user_id: string;
 
   @Field(() => Boolean)
   notifications_enabled: boolean;

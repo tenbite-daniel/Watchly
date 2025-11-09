@@ -6,7 +6,7 @@ import {
   NotesService,
 } from './content.service';
 import { Lists } from './entities/lists.entity';
-import { ListItems } from './entities/list-item.entity';
+import { ListItem } from './entities/list-item.entity';
 import { Ratings } from './entities/ratings.entity';
 import { Notes } from './entities/notes.entity';
 
@@ -19,11 +19,11 @@ export class ListResolver {
     return this.contentService.findAll();
   }
 }
-@Resolver(() => ListItems)
+@Resolver(() => ListItem)
 export class ListItemResolver {
   constructor(private readonly contentService: ListItemService) {}
 
-  @Query(() => [ListItems], { name: 'listItems' })
+  @Query(() => [ListItem], { name: 'listItems' })
   findAll() {
     return this.contentService.findAll();
   }

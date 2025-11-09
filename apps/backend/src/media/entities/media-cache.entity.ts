@@ -1,5 +1,8 @@
-import { ObjectType, Field, ID, Float, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Float, Int, ID } from '@nestjs/graphql';
 import { GraphQLJSON } from 'graphql-type-json';
+import { ListItem } from 'src/content/entities/list-item.entity';
+import { Notes } from 'src/content/entities/notes.entity';
+import { Ratings } from 'src/content/entities/ratings.entity';
 import { TvSeason } from 'src/tv/entities/tv-season.entity';
 
 @ObjectType()
@@ -14,7 +17,7 @@ export class MediaCache {
   title: string;
 
   @Field({ nullable: true })
-  origianl_title?: string;
+  original_title?: string;
 
   @Field({ nullable: true })
   tagline?: string;
@@ -26,10 +29,13 @@ export class MediaCache {
   backdrop_path?: string;
 
   @Field({ nullable: true })
-  release_date?: string;
+  release_date?: Date;
 
   @Field({ nullable: true })
   first_air_date?: Date;
+
+  @Field({ nullable: true })
+  overview?: string;
 
   @Field({ nullable: true })
   status?: string;
@@ -44,7 +50,7 @@ export class MediaCache {
   vote_count?: number;
 
   @Field({ nullable: true })
-  origial_language?: string;
+  original_language?: string;
 
   @Field(() => Boolean, { nullable: true })
   adult?: boolean;
@@ -92,5 +98,14 @@ export class MediaCache {
   created_at: Date;
 
   @Field(() => [TvSeason], { nullable: true })
-  tv_session: TvSeason[];
+  tv_seasons: TvSeason[];
+
+  @Field(() => [ListItem], { nullable: true })
+  list_items?: ListItem[];
+
+  @Field(() => [Ratings], { nullable: true })
+  ratings?: Ratings[];
+
+  @Field(() => [Notes], { nullable: true })
+  notes?: Notes[];
 }
